@@ -1,12 +1,25 @@
-import { Controller, Delete, Get, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { SongsService } from './songs.service';
+import { createSongDto } from './dto/create-song-dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('songs')
 export class SongsController {
   constructor(private readonly songsService: SongsService) {}
+
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  createSong() {
-    return this.songsService.createSongService('first song');
+  createSong(@Body() createSongDto: createSongDto) {
+    return this.songsService.createSongService(createSongDto);
   }
 
   @Get()
@@ -15,8 +28,8 @@ export class SongsController {
   }
 
   @Get(':id')
-  getSongById() {
-    return 'here is a song by id ${id}';
+  getSongById(@Param('id') id: number) {
+    return this.songsService.getSongByIdService(id);
   }
 
   @Put(':id')
