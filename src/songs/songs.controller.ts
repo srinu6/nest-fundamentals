@@ -11,11 +11,14 @@ import {
 import { SongsService } from './songs.service';
 import { createSongDto } from './dto/create-song-dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('songs')
 @Controller('songs')
 export class SongsController {
   constructor(private readonly songsService: SongsService) {}
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Post()
   createSong(@Body() createSongDto: createSongDto) {
