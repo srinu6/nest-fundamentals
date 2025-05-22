@@ -3,10 +3,14 @@ import { createSongDto } from './dto/create-song-dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Songs } from './songs.schema';
 import { Model } from 'mongoose';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class SongsService {
-  constructor(@InjectModel(Songs.name) private songsModel: Model<Songs>) {}
+  constructor(
+    @InjectModel(Songs.name) private songsModel: Model<Songs>,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   private readonly songs: createSongDto[] = [];
 
@@ -17,6 +21,8 @@ export class SongsService {
       artists: song.artists,
       duration: song.duration,
     });
+    this.eventEmitter.emit('song.created', newSong);
+    console.log('Song created event emitted:', newSong);
     return newSong.save();
   }
 

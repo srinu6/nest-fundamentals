@@ -4,10 +4,14 @@ import { AppService } from './app.service';
 import { SongsModule } from './songs/songs.module';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://srinumaripi:lqWmQVt1ioLDWzl7@cluster0.rwcxxjy.mongodb.net/nest_movie_db'),
+    EventEmitterModule.forRoot(),
+    MongooseModule.forRoot(
+      'mongodb+srv://srinumaripi:lqWmQVt1ioLDWzl7@cluster0.rwcxxjy.mongodb.net/nest_movie_db',
+    ),
     SongsModule,
     AuthModule,
   ],
