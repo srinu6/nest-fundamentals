@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Songs } from './songs.schema';
 import { Model } from 'mongoose';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { SongsBuilder } from './songs.builder';
 
 @Injectable()
 export class SongsService {
@@ -15,15 +16,23 @@ export class SongsService {
   private readonly songs: createSongDto[] = [];
 
   createSongService(song: createSongDto) {
-    const newSong = new this.songsModel({
-      title: song.title,
-      releaseDate: song.releaseDate,
-      artists: song.artists,
-      duration: song.duration,
-    });
+    const songBuilder = new SongsBuilder();
+    songBuilder
+      .setTitle(song.title)
+      .setArtists(song.artists)
+      .setReleaseDate(song.releaseDate)
+      .setDuration(song.duration);
+    const newSong = songBuilder.build();
+    // const newSong = new this.songsModel({
+    //   title: song.title,
+    //   releaseDate: song.releaseDate,
+    //   artists: song.artists,
+    //   duration: song.duration,
+    // });
+    const newSongDB = new this.songsModel(newSong);
     this.eventEmitter.emit('song.created', newSong);
     console.log('Song created event emitted:', newSong);
-    return newSong.save();
+    return newSongDB.save();
   }
 
   getAllSongsService() {

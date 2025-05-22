@@ -5,6 +5,7 @@ import { SongsModule } from './songs/songs.module';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     ),
     SongsModule,
     AuthModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
